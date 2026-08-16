@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SynLeaderboard - マリオカート 交流戦成績・分析ダッシュボード</title>
+  <meta name="description" content="Discordのログファイルからマリオカート6v6交流戦の成績データを自動抽出・可視化するWebアプリケーション">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@400;500;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Toast Notification Bar -->
+  <div id="toastNotification" class="toast-notification"></div>
+
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <div class="brand">
+        <div class="brand-icon">S</div>
+        <div>
+          <h1 class="brand-title">SynLeaderboard</h1>
+          <p class="brand-subtitle">MK8D 6v6 Match Analytics & Score Dashboard</p>
+        </div>
+      </div>
+      <div class="nav-actions">
+        <button id="btnExportDataFile" class="btn btn-secondary" title="現在の成績データを軽量ファイルとして出力">
+          💾 共有用ファイルを保存
+        </button>
+        <button id="btnShareLink" class="btn btn-primary" title="現在の成績データをクラウド共有・URL発行">
+          ☁️ クラウド共有リンク発行
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="margin-top: 1.5rem;">
+
+    <!-- Dashboard Main 2-Column Layout -->
+    <div id="dashboardContent">
+      
+      <div class="app-layout-container">
+
+        <!-- Left Sidebar (Calendar Widget & VS Code Style Explorer) -->
+        <aside class="left-sidebar-panel">
+
+          <!-- Box 1: Interactive Calendar Widget -->
+          <div class="sidebar-box">
+            <div class="sidebar-box-title">
+              <span>📅 試合カレンダー</span>
+              <div style="display: flex; gap: 0.25rem;">
+                <button id="btnExpandCalendar" class="btn btn-secondary btn-sm" title="カレンダーを大画面で表示">🔍 拡大</button>
+                <button id="btnClearCalendarFilter" class="btn btn-secondary btn-sm" style="display: none;">解除</button>
+              </div>
+            </div>
+            
+            <div class="calendar-widget">
+              <div class="calendar-header">
+                <div style="display: flex; gap: 0.25rem;">
+                  <button id="btnPrevYear" class="calendar-nav-btn" title="前年へ (1年戻る)">&laquo;</button>
+                  <button id="btnPrevMonth" class="calendar-nav-btn" title="前月へ">&lt;</button>
+                </div>
+                <span id="calendarHeaderTitle" class="calendar-header-title">2026年 8月</span>
+                <div style="display: flex; gap: 0.25rem;">
+                  <button id="btnNextMonth" class="calendar-nav-btn" title="次月へ">&gt;</button>
+                  <button id="btnNextYear" class="calendar-nav-btn" title="次年へ (1年進む)">&raquo;</button>
+                </div>
+              </div>
+              <div id="calendarDaysGrid" class="calendar-days-grid">
+                <!-- Dynamically generated days -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Box 2: Explorer Match Tree (VS Code File Tree Style) -->
+          <div class="sidebar-box">
+            <div class="sidebar-box-title">
+              <span>📁 戦績エクスプローラー</span>
+              <div style="display: flex; gap: 0.25rem;">
+                <select id="explorerSortSelect" class="select-control" style="padding: 0.15rem 0.4rem; font-size: 0.75rem; width: auto;" title="エクスプローラー順序">
+                  <option value="newest">最新順</option>
+                  <option value="oldest">古い順</option>
+                </select>
+                <button id="btnExpandAllExplorer" class="btn btn-secondary btn-sm" title="すべての年フォルダを展開">📂 全展開</button>
+                <button id="btnCollapseAllExplorer" class="btn btn-secondary btn-sm" title="すべての年フォルダを畳む">📁 全収納</button>
+              </div>
+            </div>
+            <div id="explorerMatchTree" class="explorer-container">
+              <!-- Dynamically generated match items -->
+            </div>
+          </div>
+
+        </aside>
+
+        <!-- Right Main Panel (KPIs, Filters, Match Grid) -->
+        <div class="right-main-panel">
+
+          <!-- KPI Summary Cards Grid -->
+          <section class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-label">総試合数 (有効試合)</div>
+              <div id="kpiTotalMatches" class="kpi-value">0</div>
+              <div class="kpi-sub">解析済み6v6交流戦</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">勝率</div>
+              <div id="kpiWinRate" class="kpi-value text-highlight">0.0%</div>
+              <div id="kpiWinLoss" class="kpi-sub">0勝 0敗 0分</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-label">平均得点差</div>
+              <div id="kpiAvgDiff" class="kpi-value">+0.0</div>
+              <div class="kpi-sub">1試合あたりの平均リード点数</div>
+            </div>
+          </section>
+
+          <!-- Controls & Filter Bar -->
+          <section class="controls-bar">
+            <!-- Opponent Search Box with Live Fuzzy Suggestions -->
+            <div class="search-box-wrapper">
+              <input 
+                type="text" 
+                id="teamSearchInput" 
+                class="search-input" 
+                placeholder="対戦相手チーム名で検索 (例: Vol, Nx ...)"
+                autocomplete="off"
+              >
+              <div id="suggestionBox" class="suggestion-box"></div>
+            </div>
+
+            <!-- Filter Row 1: Result & Sort -->
+            <div class="filters-row">
+              <div class="filter-group">
+                <label class="filter-label" for="resultFilterSelect">勝敗区分</label>
+                <select id="resultFilterSelect" class="select-control">
+                  <option value="all">すべての試合</option>
+                  <option value="win">勝利のみ</option>
+                  <option value="loss">敗北のみ</option>
+                  <option value="draw">引き分けのみ</option>
+                </select>
+              </div>
+
+              <div class="filter-group">
+                <label class="filter-label" for="sortSelect">並び替え</label>
+                <select id="sortSelect" class="select-control">
+                  <option value="newest">日付順 (最新順)</option>
+                  <option value="oldest">日付順 (古い順)</option>
+                  <option value="diff_desc">得点差が大きい順</option>
+                  <option value="diff_asc">得点差が小さい順</option>
+                  <option value="score_desc">自チーム得点が高い順</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Filter Row 2: Flexible Score Difference Range Inputs -->
+            <div class="score-diff-filter-container">
+              <div class="filter-label">点数差の範囲で絞り込み</div>
+              <div class="score-diff-inputs-row">
+                <div class="input-with-unit">
+                  <span class="unit-label">最小:</span>
+                  <input type="number" id="minDiffInput" class="diff-number-input" placeholder="例: +15">
+                  <span class="unit-text">pt</span>
+                </div>
+                <span class="range-separator">〜</span>
+                <div class="input-with-unit">
+                  <span class="unit-label">最大:</span>
+                  <input type="number" id="maxDiffInput" class="diff-number-input" placeholder="例: +80">
+                  <span class="unit-text">pt</span>
+                </div>
+                <button id="btnClearDiffRange" class="btn btn-secondary btn-sm">クリア</button>
+              </div>
+
+              <!-- Quick Presets -->
+              <div class="preset-buttons-row">
+                <span class="preset-label">クイック設定:</span>
+                <button class="preset-btn" data-min="" data-max="">全表示</button>
+                <button class="preset-btn" data-min="30" data-max="">大勝 (+30pt以上)</button>
+                <button class="preset-btn" data-min="1" data-max="">勝利 (+1pt以上)</button>
+                <button class="preset-btn" data-min="-10" data-max="10">接戦 (±10pt以内)</button>
+                <button class="preset-btn" data-min="" data-max="-1">敗北 (-1pt以下)</button>
+                <button class="preset-btn" data-min="" data-max="-30">大敗 (-30pt以下)</button>
+              </div>
+            </div>
+
+            <!-- Validation Checkbox Row -->
+            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+              <input type="checkbox" id="chkValid984" checked style="accent-color: var(--color-accent); cursor: pointer;">
+              <label for="chkValid984" style="cursor: pointer; font-weight: 600;">
+                全合計984ptの成立試合のみ表示 (0:0やテスト試合・途中で終わっている試合を除外)
+              </label>
+            </div>
+          </section>
+
+          <!-- Match Cards Section -->
+          <section>
+            <div class="matches-section-header">
+              <h2 class="section-title">試合結果一覧</h2>
+              <span id="matchesCountBadge" class="count-badge">0 件</span>
+            </div>
+
+            <div id="matchesGrid" class="matches-grid">
+              <!-- Dynamically populated match cards -->
+            </div>
+          </section>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Modal 1: Match Details & Race Chart Modal -->
+  <div id="matchModal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">試合結果詳細 & レース点数差推移</h3>
+        <button id="closeMatchModal" class="modal-close">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="modal-match-summary">
+          <div class="summary-teams">
+            <span id="modalHomeTeam" class="text-highlight">Syn</span> vs <span id="modalAwayTeam">対戦相手</span>
+          </div>
+
+          <div class="summary-score-box">
+            <span id="modalScore" class="summary-score">500 : 484</span>
+            <span id="modalDiffBadge" class="diff-badge">+16</span>
+          </div>
+
+          <div class="muted font-bold" style="font-size: 0.85rem;">
+            日時: <span id="modalDate">-</span> | 枠: <span id="modalSlotTag">-</span>
+          </div>
+        </div>
+
+        <!-- Summary Notice if races missing -->
+        <div id="modalRaceNotice" style="display: none; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); padding: 0.85rem 1.25rem; border-radius: var(--radius-sm); font-size: 0.85rem; color: var(--color-accent); font-weight: 600; margin-bottom: 1.5rem;">
+          ℹ️ この試合は最終要約スコアのみ記録されています。
+        </div>
+
+        <!-- Line Chart Container -->
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
+          📈 12レース点数差推移 (縦軸: 点数差 / 横軸: レース数)
+        </div>
+        <div class="chart-container">
+          <canvas id="matchChartCanvas"></canvas>
+        </div>
+
+        <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">
+          📋 レース別詳細スコア & 順位
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th class="text-center">レース</th>
+                <th class="text-center">獲得点 (Syn - 相手)</th>
+                <th class="text-center">レース差</th>
+                <th>Synメンバー順位</th>
+                <th class="text-center">累積点数</th>
+                <th class="text-center">累積リード</th>
+              </tr>
+            </thead>
+            <tbody id="modalRaceTableBody">
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Cloud Share & QR Code Modal -->
+  <div id="shareModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">☁️ クラウド共有 & 📱 スマホ共有</h3>
+        <button id="closeShareModal" class="modal-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="text-align: center;">
+        
+        <div style="background: rgba(15, 23, 42, 0.6); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.25rem; text-align: left;">
+          <p style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">
+            クラウド共有 URL（サーバーに保存済み）
+          </p>
+          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+            この短縮URLを送信するだけで、相手のブラウザ上に全成績データが一発で表示されます！
+          </p>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="shareUrlInput" class="search-input" readonly style="font-size: 0.85rem; background: #0f172a; color: var(--color-accent); font-weight: 700;">
+            <button id="btnCopyShareUrl" class="btn btn-primary" style="white-space: nowrap;">URLをコピー</button>
+          </div>
+        </div>
+
+        <div id="shareStatusBox" style="display: none; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.85rem; border-radius: var(--radius-sm);"></div>
+
+        <div style="background: #fff; padding: 1.25rem; border-radius: var(--radius-md); display: inline-block; margin-bottom: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+          <img id="qrCodeImg" src="" alt="共有用QRコード" style="width: 180px; height: 180px; display: block;">
+        </div>
+
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1rem;">
+          📱 スマホのカメラをかざすとその場で全成績が開きます
+        </p>
+
+        <button id="btnDownloadDataInModal" class="btn btn-secondary" style="width: 100%;">
+          💾 共有用データファイル (syn_data.json) をダウンロード
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 3: Expanded Full-Screen Calendar Modal -->
+  <div id="expandedCalendarModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 1100px; width: 95%;">
+      <div class="modal-header">
+        <h3 class="modal-title">📅 月間全試合カレンダー (大画面ビュー)</h3>
+        <button id="closeExpandedCalendarModal" class="modal-close">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.25rem;">
+        
+        <div class="calendar-header" style="margin-bottom: 1rem;">
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="btnPrevYearExp" class="btn btn-secondary">&laquo; 前の年 (1年戻る)</button>
+            <button id="btnPrevMonthExp" class="btn btn-secondary">&lt; 前の月</button>
+          </div>
+          <span id="calendarHeaderTitleExp" style="font-size: 1.35rem; font-weight: 800; color: var(--color-accent);">2026年 8月</span>
+          <div style="display: flex; gap: 0.5rem;">
+            <button id="btnNextMonthExp" class="btn btn-secondary">次の月 &gt;</button>
+            <button id="btnNextYearExp" class="btn btn-secondary">次の年 (1年進む) &raquo;</button>
+          </div>
+        </div>
+
+        <div id="calendarDaysGridExp" class="expanded-calendar-grid">
+          <!-- Dynamically generated large calendar cells -->
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Application Modules -->
+  <script src="js/data_bundle.js"></script>
+  <script src="js/levenshtein.js"></script>
+  <script src="js/parser.js"></script>
+  <script src="js/analytics.js"></script>
+  <script src="js/chart.js"></script>
+  <script src="js/calendar.js"></script>
+  <script src="js/app.js"></script>
+
+</body>
+</html>

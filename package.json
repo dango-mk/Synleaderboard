@@ -1,0 +1,20 @@
+{
+  "name": "syn-leaderboard",
+  "version": "1.0.0",
+  "description": "Mario Kart 8 Deluxe 6v6 Match Analytics & Score Dashboard",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve ."
+  },
+  "keywords": [
+    "mariokart",
+    "mk8d",
+    "leaderboard",
+    "analytics",
+    "dashboard",
+    "discord-log"
+  ],
+  "author": "Synchronicity",
+  "license": "MIT"
+}
