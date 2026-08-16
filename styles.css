@@ -52,13 +52,13 @@ body {
 }
 
 .container {
-  max-width: 1360px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0 1.25rem;
 }
 
 .main-content-container {
-  margin-top: 1.5rem;
+  margin-top: 1.25rem;
 }
 
 /* Navbar */
@@ -112,56 +112,66 @@ body {
   color: var(--text-muted);
 }
 
-/* 2-Column Main App Layout */
-.app-layout-container {
+/* ==========================================================================
+   Top Layout Row: [ Calendar & Explorer Side-by-Side ] + [ KPIs & Filters ]
+   ========================================================================== */
+
+.top-dashboard-row {
   display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
+  gap: 1.25rem;
+  align-items: stretch;
+  margin-bottom: 1.75rem;
 }
 
-.left-sidebar-panel {
-  width: 340px;
+.left-widgets-row {
+  width: 640px;
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-  position: sticky;
-  top: 5rem;
+  gap: 1rem;
 }
 
-.right-main-panel {
+.widget-half {
   flex: 1;
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+}
+
+.right-kpi-controls-panel {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  justify-content: space-between;
 }
 
 .sidebar-box {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1rem;
+  padding: 0.95rem;
   box-shadow: var(--shadow-card);
 }
 
 .sidebar-box-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--text-main);
-  margin-bottom: 0.85rem;
+  margin-bottom: 0.75rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0.5rem;
+  padding-bottom: 0.45rem;
 }
 
 /* Calendar Widget */
 .calendar-widget {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.5rem;
+  flex: 1;
 }
 
 .calendar-header {
@@ -174,14 +184,15 @@ body {
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   color: var(--text-main);
-  width: 28px;
-  height: 28px;
+  width: 26px;
+  height: 26px;
   border-radius: 4px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
+  font-size: 0.775rem;
   transition: var(--transition-smooth);
 }
 
@@ -191,7 +202,7 @@ body {
 }
 
 .calendar-header-title {
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   font-weight: 800;
   color: var(--color-accent);
 }
@@ -199,31 +210,32 @@ body {
 .calendar-days-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 4px;
+  gap: 3px;
   text-align: center;
+  flex: 1;
 }
 
 .calendar-day-header {
-  font-size: 0.725rem;
+  font-size: 0.7rem;
   font-weight: 700;
   color: var(--text-muted);
-  padding: 2px 0;
+  padding: 1px 0;
 }
 
 .calendar-day-header.sun { color: var(--color-loss); }
 .calendar-day-header.sat { color: var(--color-accent); }
 
 .calendar-day {
-  min-height: 42px;
+  min-height: 36px;
   background: var(--bg-input);
   border: 1px solid transparent;
   border-radius: 4px;
-  padding: 2px;
+  padding: 1px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   color: var(--text-dim);
   cursor: default;
   transition: var(--transition-smooth);
@@ -254,29 +266,28 @@ body {
   background: rgba(56, 189, 248, 0.15) !important;
 }
 
-.day-number {
-  font-size: 0.75rem;
-}
+.day-number { font-size: 0.725rem; }
 
 .match-dot-badge {
-  font-size: 0.625rem;
-  padding: 0px 4px;
+  font-size: 0.6rem;
+  padding: 0px 3px;
   border-radius: 8px;
   font-weight: 800;
   color: #fff;
-  line-height: 1.2;
+  line-height: 1.1;
 }
 
 .bg-win { background-color: var(--color-win); }
 .bg-loss { background-color: var(--color-loss); }
 .bg-draw { background-color: var(--color-draw); }
 
-/* VS Code Style Explorer Tree */
+/* VS Code Style Explorer Tree (Matching Height with Calendar) */
 .explorer-container {
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
-  max-height: 480px;
+  height: 280px;
+  max-height: 280px;
   overflow-y: auto;
   padding-right: 4px;
 }
@@ -303,7 +314,7 @@ body {
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  font-size: 0.8rem;
+  font-size: 0.775rem;
   font-weight: 700;
   cursor: pointer;
   user-select: none;
@@ -328,7 +339,7 @@ body {
 
 .explorer-month-header {
   background: rgba(15, 23, 42, 0.6);
-  font-size: 0.775rem;
+  font-size: 0.75rem;
   color: var(--text-main);
 }
 
@@ -336,20 +347,13 @@ body {
   background: rgba(30, 41, 59, 0.9);
 }
 
-.folder-icon {
-  font-size: 0.85rem;
-}
-
-.group-title {
-  flex: 1;
-  color: var(--text-main);
-}
-
+.folder-icon { font-size: 0.85rem; }
+.group-title { flex: 1; color: var(--text-main); }
 .group-count {
-  font-size: 0.7rem;
+  font-size: 0.675rem;
   color: var(--text-muted);
   background: var(--bg-main);
-  padding: 1px 6px;
+  padding: 1px 5px;
   border-radius: 10px;
 }
 
@@ -369,7 +373,7 @@ body {
   align-items: center;
   gap: 0.4rem;
   padding: 0.3rem 0.5rem;
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   border-radius: 4px;
   cursor: pointer;
   transition: var(--transition-smooth);
@@ -390,7 +394,7 @@ body {
 }
 
 .match-date-badge {
-  font-size: 0.7rem;
+  font-size: 0.675rem;
   font-weight: 700;
   color: var(--color-accent);
   background: rgba(56, 189, 248, 0.1);
@@ -399,10 +403,7 @@ body {
   font-family: monospace;
 }
 
-.match-file-icon {
-  font-size: 0.8rem;
-}
-
+.match-file-icon { font-size: 0.775rem; }
 .match-title {
   flex: 1;
   white-space: nowrap;
@@ -410,38 +411,29 @@ body {
   text-overflow: ellipsis;
   font-weight: 600;
 }
-
-.match-score {
-  font-family: monospace;
-  font-size: 0.725rem;
-  color: var(--text-muted);
-}
-
-.match-diff {
-  font-weight: 800;
-  font-size: 0.725rem;
-}
+.match-score { font-family: monospace; font-size: 0.7rem; color: var(--text-muted); }
+.match-diff { font-weight: 800; font-size: 0.7rem; }
 
 /* KPI Summary Cards Grid */
 .kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 0.85rem;
 }
 
 .kpi-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
+  padding: 1rem;
   box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.25rem;
 }
 
 .kpi-label {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-muted);
   text-transform: uppercase;
@@ -449,14 +441,14 @@ body {
 }
 
 .kpi-value {
-  font-size: 1.85rem;
+  font-size: 1.65rem;
   font-weight: 900;
   color: var(--text-main);
   line-height: 1.1;
 }
 
 .kpi-sub {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   color: var(--text-dim);
 }
 
@@ -465,11 +457,11 @@ body {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
+  padding: 1rem;
   box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .search-box-wrapper {
@@ -479,12 +471,12 @@ body {
 
 .search-input {
   width: 100%;
-  padding: 0.75rem 1rem;
+  padding: 0.65rem 0.85rem;
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   color: var(--text-main);
-  font-size: 0.95rem;
+  font-size: 0.875rem;
   outline: none;
   transition: var(--transition-smooth);
 }
@@ -540,31 +532,31 @@ body {
 
 .filters-row {
   display: flex;
-  gap: 1rem;
+  gap: 0.75rem;
   flex-wrap: wrap;
 }
 
 .filter-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.3rem;
   flex: 1;
-  min-width: 160px;
+  min-width: 140px;
 }
 
 .filter-label {
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   font-weight: 700;
   color: var(--text-muted);
 }
 
 .select-control {
-  padding: 0.6rem 0.85rem;
+  padding: 0.5rem 0.7rem;
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
   color: var(--text-main);
-  font-size: 0.875rem;
+  font-size: 0.825rem;
   outline: none;
   cursor: pointer;
   transition: var(--transition-smooth);
@@ -578,9 +570,9 @@ body {
 .score-diff-filter-container {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.4rem;
   background: rgba(15, 23, 42, 0.5);
-  padding: 0.85rem;
+  padding: 0.65rem 0.75rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--border-subtle);
 }
@@ -588,39 +580,39 @@ body {
 .score-diff-inputs-row {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.65rem;
   flex-wrap: wrap;
 }
 
 .input-with-unit {
   display: flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.45rem;
 }
 
 .unit-label {
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   color: var(--text-muted);
   font-weight: 700;
 }
 
 .diff-number-input {
-  width: 70px;
+  width: 60px;
   background: transparent;
   border: none;
   color: var(--text-main);
-  font-size: 0.875rem;
+  font-size: 0.825rem;
   font-weight: 700;
   outline: none;
   text-align: center;
 }
 
 .unit-text {
-  font-size: 0.75rem;
+  font-size: 0.725rem;
   color: var(--text-dim);
 }
 
@@ -632,12 +624,12 @@ body {
 .preset-buttons-row {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.3rem;
   flex-wrap: wrap;
 }
 
 .preset-label {
-  font-size: 0.725rem;
+  font-size: 0.675rem;
   color: var(--text-muted);
   font-weight: 700;
 }
@@ -646,9 +638,9 @@ body {
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   color: var(--text-muted);
-  padding: 3px 8px;
+  padding: 2px 6px;
   border-radius: 4px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   cursor: pointer;
   transition: var(--transition-smooth);
 }
@@ -665,7 +657,14 @@ body {
   font-weight: 700;
 }
 
-/* Match Cards Grid */
+/* ==========================================================================
+   Full-Width Bottom Section: Match Cards Section (画面横幅100%で大量表示)
+   ========================================================================== */
+
+.matches-full-width-section {
+  width: 100%;
+}
+
 .matches-section-header {
   display: flex;
   justify-content: space-between;
@@ -674,7 +673,7 @@ body {
 }
 
 .section-title {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 800;
   color: var(--text-main);
 }
@@ -691,19 +690,20 @@ body {
 
 .matches-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
   gap: 1.25rem;
+  width: 100%;
 }
 
 .match-card {
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
-  padding: 1.25rem;
+  padding: 1.15rem;
   box-shadow: var(--shadow-card);
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.8rem;
   position: relative;
   overflow: hidden;
   transition: var(--transition-smooth);
@@ -727,9 +727,9 @@ body {
 .teams-title {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.45rem;
   font-weight: 800;
-  font-size: 1.05rem;
+  font-size: 1.025rem;
 }
 
 .team-syn { color: var(--color-accent); }
@@ -753,12 +753,12 @@ body {
   align-items: baseline;
   gap: 0.75rem;
   background: rgba(15, 23, 42, 0.4);
-  padding: 0.6rem 0.85rem;
+  padding: 0.55rem 0.8rem;
   border-radius: var(--radius-sm);
 }
 
 .main-score {
-  font-size: 1.5rem;
+  font-size: 1.45rem;
   font-weight: 900;
   letter-spacing: -0.02em;
 }
@@ -766,7 +766,7 @@ body {
 .score-colon { color: var(--text-dim); margin: 0 2px; }
 
 .score-diff {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 800;
 }
 
@@ -794,7 +794,7 @@ body {
 
 .card-footer {
   margin-top: auto;
-  padding-top: 0.5rem;
+  padding-top: 0.4rem;
 }
 
 /* Buttons */
@@ -839,7 +839,7 @@ body {
 
 .btn-detail {
   width: 100%;
-  padding: 0.55rem;
+  padding: 0.5rem;
   background: var(--bg-input);
   border: 1px solid var(--border-subtle);
   color: var(--text-main);
@@ -1136,15 +1136,9 @@ body {
   transition: var(--transition-smooth);
 }
 
-.exp-match-pill.win {
-  border-left-color: var(--color-win);
-}
-.exp-match-pill.loss {
-  border-left-color: var(--color-loss);
-}
-.exp-match-pill.draw {
-  border-left-color: var(--color-draw);
-}
+.exp-match-pill.win { border-left-color: var(--color-win); }
+.exp-match-pill.loss { border-left-color: var(--color-loss); }
+.exp-match-pill.draw { border-left-color: var(--color-draw); }
 
 .exp-match-pill:hover {
   background: rgba(56, 189, 248, 0.25);
@@ -1160,16 +1154,8 @@ body {
   max-width: 70px;
 }
 
-.exp-match-score {
-  font-family: monospace;
-  font-size: 0.675rem;
-  color: var(--text-muted);
-}
-
-.exp-match-diff {
-  font-weight: 800;
-  font-size: 0.675rem;
-}
+.exp-match-score { font-family: monospace; font-size: 0.675rem; color: var(--text-muted); }
+.exp-match-diff { font-weight: 800; font-size: 0.675rem; }
 
 /* Toast Notifications */
 .toast-notification {
@@ -1196,49 +1182,44 @@ body {
 }
 
 /* ==========================================================================
-   📱 Comprehensive Mobile & Tablet Responsive Improvements
+   📱 Responsive Breakpoints
    ========================================================================== */
 
-/* Tablet & Mobile Layout Breakpoint (under 960px) */
-@media (max-width: 960px) {
-  .container {
-    padding: 0 0.85rem;
-  }
-
-  .app-layout-container {
+/* Laptops & Mid Screens (under 1200px) */
+@media (max-width: 1200px) {
+  .top-dashboard-row {
     flex-direction: column;
     gap: 1.25rem;
   }
 
-  .left-sidebar-panel {
+  .left-widgets-row {
     width: 100%;
-    position: static;
   }
 
-  .sidebar-box {
-    padding: 0.85rem;
-  }
-
-  .explorer-container {
-    max-height: 320px;
-  }
-
-  .kpi-grid {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.75rem;
-  }
-
-  .kpi-card {
-    padding: 0.85rem;
-  }
-
-  .kpi-value {
-    font-size: 1.5rem;
+  .right-kpi-controls-panel {
+    width: 100%;
   }
 }
 
-/* Small Smartphone Screen Breakpoint (under 640px) */
-@media (max-width: 640px) {
+/* Tablet & Mobile Breakpoint (under 720px) */
+@media (max-width: 720px) {
+  .container {
+    padding: 0 0.85rem;
+  }
+
+  .left-widgets-row {
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .widget-half {
+    width: 100%;
+  }
+
+  .explorer-container {
+    max-height: 260px;
+  }
+
   .brand-title {
     font-size: 1.05rem;
   }
@@ -1253,7 +1234,6 @@ body {
     font-size: 1.1rem;
   }
 
-  /* KPI grid stacked on small mobile */
   .kpi-grid {
     grid-template-columns: 1fr;
     gap: 0.65rem;
@@ -1274,7 +1254,6 @@ body {
     font-size: 0.725rem;
   }
 
-  /* Controls & Filters stacking */
   .controls-bar {
     padding: 0.85rem;
     gap: 0.75rem;
@@ -1292,6 +1271,7 @@ body {
 
   .select-control {
     width: 100%;
+    height: 42px;
   }
 
   .score-diff-inputs-row {
@@ -1299,20 +1279,19 @@ body {
   }
 
   .diff-number-input {
-    width: 50px;
+    width: 55px;
     font-size: 0.8rem;
   }
 
   .preset-buttons-row {
-    gap: 0.3rem;
+    gap: 0.35rem;
   }
 
   .preset-btn {
-    padding: 4px 7px;
-    font-size: 0.7rem;
+    padding: 5px 8px;
+    font-size: 0.725rem;
   }
 
-  /* Matches Grid single column on mobile */
   .matches-grid {
     grid-template-columns: 1fr;
     gap: 0.85rem;
@@ -1334,7 +1313,6 @@ body {
     font-size: 0.95rem;
   }
 
-  /* Modals full-screen fit on mobile */
   .modal-overlay {
     padding: 0.35rem;
   }
@@ -1384,7 +1362,6 @@ body {
     padding: 0.45rem 0.5rem;
   }
 
-  /* Expanded Calendar Modal Mobile Fixes */
   #expandedCalendarModal .modal-container {
     max-width: 100vw;
     max-height: 95vh;

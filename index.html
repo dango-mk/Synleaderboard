@@ -40,13 +40,14 @@
     <!-- Dashboard Main Layout -->
     <div id="dashboardContent">
       
-      <div class="app-layout-container">
+      <!-- Top Section: [ Calendar & Explorer Side-by-Side ] + [ KPIs & Filters ] -->
+      <div class="top-dashboard-row">
 
-        <!-- Left Sidebar (Calendar Widget & VS Code Style Explorer) -->
-        <aside class="left-sidebar-panel">
+        <!-- Left Box: Calendar & Explorer Side-by-Side Row -->
+        <aside class="left-widgets-row">
 
           <!-- Box 1: Interactive Calendar Widget -->
-          <div class="sidebar-box">
+          <div class="sidebar-box widget-half">
             <div class="sidebar-box-title">
               <span>📅 試合カレンダー</span>
               <div style="display: flex; gap: 0.25rem;">
@@ -74,7 +75,7 @@
           </div>
 
           <!-- Box 2: Explorer Match Tree (VS Code File Tree Style) -->
-          <div class="sidebar-box">
+          <div class="sidebar-box widget-half">
             <div class="sidebar-box-title">
               <span>📁 戦績エクスプローラー</span>
               <div style="display: flex; gap: 0.25rem;">
@@ -93,8 +94,8 @@
 
         </aside>
 
-        <!-- Right Main Panel (KPIs, Filters, Match Grid) -->
-        <div class="right-main-panel">
+        <!-- Right Box: KPIs & Controls/Filters Panel -->
+        <div class="right-kpi-controls-panel">
 
           <!-- KPI Summary Cards Grid -->
           <section class="kpi-grid">
@@ -186,7 +187,7 @@
             </div>
 
             <!-- Validation Checkbox Row -->
-            <div style="margin-top: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
+            <div style="margin-top: 0.25rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: var(--text-muted);">
               <input type="checkbox" id="chkValid984" checked style="accent-color: var(--color-accent); cursor: pointer;">
               <label for="chkValid984" style="cursor: pointer; font-weight: 600;">
                 全合計984ptの成立試合のみ表示 (0:0やテスト試合・途中で終わっている試合を除外)
@@ -194,20 +195,21 @@
             </div>
           </section>
 
-          <!-- Match Cards Section -->
-          <section>
-            <div class="matches-section-header">
-              <h2 class="section-title">試合結果一覧</h2>
-              <span id="matchesCountBadge" class="count-badge">0 件</span>
-            </div>
-
-            <div id="matchesGrid" class="matches-grid">
-              <!-- Dynamically populated match cards -->
-            </div>
-          </section>
-
         </div>
+
       </div>
+
+      <!-- Bottom Section: Full-Width Matches Section (横幅100%でカードを大量一括表示) -->
+      <section class="matches-full-width-section">
+        <div class="matches-section-header">
+          <h2 class="section-title">🏆 試合結果一覧</h2>
+          <span id="matchesCountBadge" class="count-badge">0 件</span>
+        </div>
+
+        <div id="matchesGrid" class="matches-grid">
+          <!-- Dynamically populated match cards (3 to 4 cards per row across 100% width) -->
+        </div>
+      </section>
 
     </div>
   </main>
