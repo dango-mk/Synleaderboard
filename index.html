@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>SynLeaderboard - マリオカート 交流戦成績・分析ダッシュボード</title>
   <meta name="description" content="Discordのログファイルからマリオカート6v6交流戦の成績データを自動抽出・可視化するWebアプリケーション">
 
@@ -32,20 +32,12 @@
           <p class="brand-subtitle">MK8D 6v6 Match Analytics & Score Dashboard</p>
         </div>
       </div>
-      <div class="nav-actions">
-        <button id="btnExportDataFile" class="btn btn-secondary" title="現在の成績データを軽量ファイルとして出力">
-          💾 共有用ファイルを保存
-        </button>
-        <button id="btnShareLink" class="btn btn-primary" title="現在の成績データをクラウド共有・URL発行">
-          ☁️ クラウド共有リンク発行
-        </button>
-      </div>
     </div>
   </header>
 
-  <main class="container" style="margin-top: 1.5rem;">
+  <main class="container main-content-container">
 
-    <!-- Dashboard Main 2-Column Layout -->
+    <!-- Dashboard Main Layout -->
     <div id="dashboardContent">
       
       <div class="app-layout-container">
@@ -281,48 +273,7 @@
     </div>
   </div>
 
-  <!-- Modal 2: Cloud Share & QR Code Modal -->
-  <div id="shareModal" class="modal-overlay">
-    <div class="modal-container" style="max-width: 540px;">
-      <div class="modal-header">
-        <h3 class="modal-title">☁️ クラウド共有 & 📱 スマホ共有</h3>
-        <button id="closeShareModal" class="modal-close">&times;</button>
-      </div>
-
-      <div class="modal-body" style="text-align: center;">
-        
-        <div style="background: rgba(15, 23, 42, 0.6); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.25rem; text-align: left;">
-          <p style="font-size: 0.9rem; font-weight: 700; color: var(--text-main); margin-bottom: 0.35rem;">
-            クラウド共有 URL（サーバーに保存済み）
-          </p>
-          <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.75rem;">
-            この短縮URLを送信するだけで、相手のブラウザ上に全成績データが一発で表示されます！
-          </p>
-          <div style="display: flex; gap: 0.5rem;">
-            <input type="text" id="shareUrlInput" class="search-input" readonly style="font-size: 0.85rem; background: #0f172a; color: var(--color-accent); font-weight: 700;">
-            <button id="btnCopyShareUrl" class="btn btn-primary" style="white-space: nowrap;">URLをコピー</button>
-          </div>
-        </div>
-
-        <div id="shareStatusBox" style="display: none; padding: 0.75rem; margin-bottom: 1rem; font-size: 0.85rem; border-radius: var(--radius-sm);"></div>
-
-        <div style="background: #fff; padding: 1.25rem; border-radius: var(--radius-md); display: inline-block; margin-bottom: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
-          <img id="qrCodeImg" src="" alt="共有用QRコード" style="width: 180px; height: 180px; display: block;">
-        </div>
-
-        <p style="font-size: 0.8rem; color: var(--text-dim); margin-bottom: 1rem;">
-          📱 スマホのカメラをかざすとその場で全成績が開きます
-        </p>
-
-        <button id="btnDownloadDataInModal" class="btn btn-secondary" style="width: 100%;">
-          💾 共有用データファイル (syn_data.json) をダウンロード
-        </button>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal 3: Expanded Full-Screen Calendar Modal -->
+  <!-- Modal 2: Expanded Full-Screen Calendar Modal -->
   <div id="expandedCalendarModal" class="modal-overlay">
     <div class="modal-container" style="max-width: 1100px; width: 95%;">
       <div class="modal-header">
