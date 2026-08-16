@@ -281,7 +281,7 @@ body {
 .bg-loss { background-color: var(--color-loss); }
 .bg-draw { background-color: var(--color-draw); }
 
-/* VS Code Style Explorer Tree (Matching Height with Calendar) */
+/* VS Code Style Explorer Tree */
 .explorer-container {
   display: flex;
   flex-direction: column;
@@ -1182,7 +1182,7 @@ body {
 }
 
 /* ==========================================================================
-   📱 Responsive Breakpoints & Mobile Expanded Calendar Fixes
+   📱 Responsive Breakpoints & Smartphone Expanded Calendar Fixes
    ========================================================================== */
 
 /* Laptops & Mid Screens (under 1200px) */
@@ -1204,7 +1204,7 @@ body {
 /* Smartphone & Tablet Breakpoint (under 720px) */
 @media (max-width: 720px) {
   .container {
-    padding: 0 0.65rem;
+    padding: 0 0.5rem;
   }
 
   .left-widgets-row {
@@ -1276,89 +1276,105 @@ body {
   }
 
   /* 📲 FIX: Smartphone Mobile Expanded Calendar Modal Layout */
-  #expandedCalendarModal .modal-overlay {
-    padding: 0.25rem;
+  #expandedCalendarModal.modal-overlay {
+    padding: 0.25rem !important;
   }
 
   #expandedCalendarModal .modal-container {
-    max-width: 98vw;
-    width: 98vw;
-    max-height: 94vh;
-    height: 94vh;
+    max-width: 98vw !important;
+    width: 98vw !important;
+    max-height: 94vh !important;
+    height: 94vh !important;
     border-radius: var(--radius-sm);
+    margin: 0 auto;
   }
 
   #expandedCalendarModal .modal-header {
-    padding: 0.65rem 0.85rem;
+    padding: 0.5rem 0.75rem !important;
   }
 
   #expandedCalendarModal .modal-title {
-    font-size: 0.95rem;
+    font-size: 0.85rem !important;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   #expandedCalendarModal .modal-body {
-    padding: 0.5rem;
+    padding: 0.4rem !important;
+    gap: 0.5rem !important;
   }
 
   #expandedCalendarModal .calendar-header {
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    justify-content: center;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    margin-bottom: 0.4rem !important;
   }
 
   #expandedCalendarModal .calendar-header-title {
-    font-size: 1.05rem;
-    width: 100%;
-    text-align: center;
-    order: -1;
-    margin-bottom: 0.2rem;
+    font-size: 0.95rem !important;
+    font-weight: 800;
+  }
+
+  #expandedCalendarModal .btn-secondary {
+    padding: 0.2rem 0.4rem !important;
+    font-size: 0.7rem !important;
   }
 
   .expanded-calendar-grid {
-    gap: 3px;
-    padding: 3px;
+    gap: 2px !important;
+    padding: 2px !important;
+    grid-template-columns: repeat(7, 1fr) !important;
   }
 
   .expanded-calendar-day-header {
-    font-size: 0.675rem;
-    padding: 2px 0;
+    font-size: 0.65rem !important;
+    padding: 2px 0 !important;
+    font-weight: 800;
   }
 
   .expanded-calendar-day {
-    min-height: 54px;
-    max-height: 80px;
-    padding: 2px;
-    gap: 2px;
+    min-height: 52px !important;
+    max-height: 75px !important;
+    padding: 2px !important;
+    gap: 1px !important;
+    border-radius: 3px !important;
+    overflow: hidden;
   }
 
   .exp-day-top {
-    margin-bottom: 1px;
+    margin-bottom: 1px !important;
   }
 
   .exp-day-number {
-    font-size: 0.725rem;
+    font-size: 0.7rem !important;
+    font-weight: 800;
   }
 
   .exp-day-summary {
-    font-size: 0.525rem;
-    padding: 0px 2px;
+    font-size: 0.5rem !important;
+    padding: 0px 2px !important;
+    line-height: 1 !important;
   }
 
   .exp-matches-list {
-    max-height: 52px;
-    gap: 2px;
+    max-height: 48px !important;
+    gap: 2px !important;
   }
 
   .exp-match-pill {
-    font-size: 0.6rem;
-    padding: 1px 3px;
+    font-size: 0.575rem !important;
+    padding: 1px 2px !important;
+    border-radius: 2px !important;
   }
 
   .exp-team-vs {
-    max-width: 40px;
+    max-width: 36px !important;
+    font-size: 0.575rem !important;
   }
 
   .exp-match-score, .exp-match-diff {
-    font-size: 0.575rem;
+    font-size: 0.55rem !important;
   }
 }

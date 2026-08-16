@@ -165,7 +165,7 @@ const CalendarWidget = (function () {
 
     calendarDaysGridExp.innerHTML = '';
 
-    const dayNames = ['日曜日', '月曜日', '火曜日', '水曜日', '木曜日', '金曜日', '土曜日'];
+    const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
     dayNames.forEach((dName, idx) => {
       const th = document.createElement('div');
       th.className = `expanded-calendar-day-header ${idx === 0 ? 'sun' : idx === 6 ? 'sat' : ''}`;
@@ -204,11 +204,10 @@ const CalendarWidget = (function () {
       if (matchesOnDay.length > 0) {
         const wins = matchesOnDay.filter(m => m.isWin).length;
         const losses = matchesOnDay.filter(m => m.diff < 0).length;
-        const draws = matchesOnDay.filter(m => m.diff === 0).length;
 
         const summaryBadge = document.createElement('span');
         summaryBadge.className = 'exp-day-summary';
-        summaryBadge.textContent = `${matchesOnDay.length}試合 (${wins}勝 ${losses}敗${draws > 0 ? ' ' + draws + '分' : ''})`;
+        summaryBadge.textContent = `${matchesOnDay.length}戦 (${wins}W${losses}L)`;
         dayTop.appendChild(summaryBadge);
       }
 
